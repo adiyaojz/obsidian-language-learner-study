@@ -416,7 +416,7 @@ export default class LanguageLearner extends Plugin {
     refreshReviewDb = async () => {
         // 检查是否设置了复习数据库路径
         if (!this.settings.review_database) {
-            this.settings.review_database = "ReviewDB.md";
+            this.settings.review_database = "data/ReviewDB.md";
         }
 
         // 从Obsidian的仓库中获取复习数据库文件
@@ -636,28 +636,33 @@ export default class LanguageLearner extends Plugin {
         target?: HTMLElement,
         evtPosition?: Position
     ): Promise<void> {
+        // 如果输入的单词为空，则直接返回
         if (!word) return;
 
+        // 如果插件设置中禁用了弹出搜索，则激活侧边搜索面板
         if (!this.settings.popup_search) {
             await this.activateView(SEARCH_PANEL_VIEW, "left");
         }
 
+        // 如果提供了目标元素（如点击的单词）并且是桌面应用，则激活右侧的学习面板
         if (target && Platform.isDesktopApp) {
             await this.activateView(LEARN_PANEL_VIEW, "right");
         }
 
+        // 派发一个自定义事件，用于通知其他部分的插件或代码进行搜索操作
         dispatchEvent(
             new CustomEvent("obsidian-langr-search", {
                 detail: { selection: word, target, evtPosition },
             })
         );
 
+        // 如果设置了自动发音，则播放单词的发音
         if (this.settings.auto_pron) {
-            let accent = this.settings.review_prons;
+            let accent = this.settings.review_prons; // 获取发音类型设置
             let wordUrl =
                 `http://dict.youdao.com/dictvoice?type=${accent}&audio=` +
-                encodeURIComponent(word);
-            playAudio(wordUrl);
+                encodeURIComponent(word); // 构建有道词典的发音URL
+            playAudio(wordUrl); // 播放发音音频
         }
     }
 
@@ -782,25 +787,33 @@ export default class LanguageLearner extends Plugin {
     }
 
     async activateView(VIEW_TYPE: string, side: "left" | "right" | "tab") {
+        // 检查当前工作空间中是否已经存在指定类型的视图
         if (this.app.workspace.getLeavesOfType(VIEW_TYPE).length === 0) {
+            // 如果没有找到指定类型的视图，则根据side参数创建一个新的视图叶节点
             let leaf;
             switch (side) {
                 case "left":
+                    // 如果side为"left"，获取左侧的叶节点
                     leaf = this.app.workspace.getLeftLeaf(false);
                     break;
                 case "right":
+                    // 如果side为"right"，获取右侧的叶节点
                     leaf = this.app.workspace.getRightLeaf(false);
                     break;
                 case "tab":
+                    // 如果side为"tab"，获取标签页叶节点
                     leaf = this.app.workspace.getLeaf("tab");
                     break;
             }
+            // 设置叶节点的视图状态为指定的视图类型，并激活它
             await leaf.setViewState({
                 type: VIEW_TYPE,
                 active: true,
             });
         }
+        // 确保指定类型的视图叶节点是可见的
         this.app.workspace.revealLeaf(
+            // 获取第一个指定类型的视图叶节点
             this.app.workspace.getLeavesOfType(VIEW_TYPE)[0]
         );
     }
