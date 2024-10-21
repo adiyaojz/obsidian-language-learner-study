@@ -17,7 +17,7 @@ export default class WordDB extends Dexie {
     }
 }
 
-interface Expression {
+export interface Expression {
     id?: number,
     expression: string,
     meaning: string,

@@ -110,10 +110,10 @@ export default {
     Jukuu: "句酷",
     Hujiang: "沪江小D",
 
-    "Word Database Path": "单词数据库路径",
+    "Word Database Name": "单词数据库名字",
     "Choose a md file as word database for auto-completion":
         "选择一个md文件作为单词数据库以自动补全",
-    "Review Database Path": "复习数据库路径",
+    "Review Database Name": "复习数据库名字",
     "Choose a md file as review database for spaced-repetition":
         "选择一个md文件作为复习数据库以间隔复习",
     "Last review sync": "上次更新时间",
@@ -177,4 +177,6 @@ export default {
         "插件打开一个服务器提供api，由此可以与谷歌浏览器插件交互",
     "when changing port, you should restart the server":
         "如果改变端口，请重启服务器",
+    "Vault Folder Database Path": "库文件数据库路径",
+    "Ignore Database Name": "忽略数据库名字",
 };

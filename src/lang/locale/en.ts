@@ -113,10 +113,10 @@ export default {
     Jukuu: "Jukuu",
     Hujiang: "Hujiang",
 
-    "Word Database Path": "Word Database Path",
+    "Word Database Name": "Word Database Path",
     "Choose a md file as word database for auto-completion":
         "Choose a md file as word database for auto-completion",
-    "Review Database Path": "Review Database Path",
+    "Review Database Name": "Review Database Path",
     "Choose a md file as review database for spaced-repetition":
         "Choose a md file as review database for spaced-repetition",
     "Last review sync": "Last review sync",
@@ -189,8 +189,9 @@ export default {
     //add new
     "Words have been written to file!": "Words have been written to file!",
     "Vault Folder Database Path": "Vault Folder Database Path",
-    "Set the database path for words and reviews, as well as ignored words and non-ignored words.":"Set the database path for words and reviews, as well as ignored words and non-ignored words.",
-"Choose a md file as ignore database for auto-completion":"Choose a md file as ignore database for auto-completion",
-"Ignore Database Path":"Ignore Database Path",
-
+    "Set the database path for words and reviews, as well as ignored words and non-ignored words.":
+        "Set the database path for words and reviews, as well as ignored words and non-ignored words.",
+    "Choose a md file as ignore database for auto-completion":
+        "Choose a md file as ignore database for auto-completion",
+    "Ignore Database Name": "Ignore Database Path",
 };

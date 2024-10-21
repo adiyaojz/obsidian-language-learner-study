@@ -98,7 +98,7 @@ export const DEFAULT_SETTINGS: MyPluginSettings = {
     col_delimiter: ",",
     auto_refresh_db: true,
     // reading
-    default_paragraphs: "1",
+    default_paragraphs: "2",
     font_size: "22px",
     font_family: '"Times New Roman"',
     line_height: "1.8em",
@@ -444,78 +444,78 @@ export class SettingTab extends PluginSettingTab {
                     new Notice("Exported");
                 })
             );
-        // 获取所有非无视单词
-        new Setting(containerEl)
-            .setName(t("Get all non-ignores"))
-            .addButton((button) =>
-                button.setButtonText(t("Export Word")).onClick(async () => {
-                    let words = await this.plugin.db.getAllExpressionSimple(
-                        true
-                    );
-                    let ignores = words
-                        .filter((w) => w.status !== 0 && w.t !== "PHRASE")
-                        .map((w) => w.expression);
-                    await navigator.clipboard.writeText(ignores.join("\n"));
-                    new Notice(t("Copied to clipboard"));
-                })
-            )
-            .addButton((button) =>
-                button
-                    .setButtonText(t("Export Word and Phrase"))
-                    .onClick(async () => {
-                        let words = await this.plugin.db.getAllExpressionSimple(
-                            true
-                        );
-                        let ignores = words
-                            .filter((w) => w.status !== 0)
-                            .map((w) => w.expression);
-                        await navigator.clipboard.writeText(ignores.join("\n"));
-                        new Notice(t("Copied to clipboard"));
-                    })
-            );
+        // // 获取所有非无视单词
+        // new Setting(containerEl)
+        //     .setName(t("Get all non-ignores"))
+        //     .addButton((button) =>
+        //         button.setButtonText(t("Export Word")).onClick(async () => {
+        //             let words = await this.plugin.db.getAllExpressionSimple(
+        //                 true
+        //             );
+        //             let ignores = words
+        //                 .filter((w) => w.status !== 0 && w.t !== "PHRASE")
+        //                 .map((w) => w.expression);
+        //             await navigator.clipboard.writeText(ignores.join("\n"));
+        //             new Notice(t("Copied to clipboard"));
+        //         })
+        //     )
+        //     .addButton((button) =>
+        //         button
+        //             .setButtonText(t("Export Word and Phrase"))
+        //             .onClick(async () => {
+        //                 let words = await this.plugin.db.getAllExpressionSimple(
+        //                     true
+        //                 );
+        //                 let ignores = words
+        //                     .filter((w) => w.status !== 0)
+        //                     .map((w) => w.expression);
+        //                 await navigator.clipboard.writeText(ignores.join("\n"));
+        //                 new Notice(t("Copied to clipboard"));
+        //             })
+        //     );
 
         // 获取所有无视单词
         // 这一行是注释，说明接下来的代码块的目的是处理与“获取所有无视单词”相关的功能。
 
-        new Setting(containerEl)
-            .setName(t("Get all ignores"))
-            // 创建一个新的设置项，并将其添加到 containerEl 容器中。
-            // setName 方法用于设置此设置项的名称，t("Get all ignores") 表示使用翻译函数翻译文本。
+        // new Setting(containerEl)
+        //     .setName(t("Get all ignores"))
+        //     // 创建一个新的设置项，并将其添加到 containerEl 容器中。
+        //     // setName 方法用于设置此设置项的名称，t("Get all ignores") 表示使用翻译函数翻译文本。
 
-            .addButton((button) =>
-                // 向设置项添加一个按钮。
-                button.setButtonText(t("Export")).onClick(async () => {
-                    // 设置按钮的文本为“Export”（导出），并为其绑定一个点击事件处理函数。
-                    // 点击事件处理函数是异步的，用于处理导出逻辑。
+        //     .addButton((button) =>
+        //         // 向设置项添加一个按钮。
+        //         button.setButtonText(t("Export")).onClick(async () => {
+        //             // 设置按钮的文本为“Export”（导出），并为其绑定一个点击事件处理函数。
+        //             // 点击事件处理函数是异步的，用于处理导出逻辑。
 
-                    let words = await this.plugin.db.getAllExpressionSimple(
-                        true
-                    );
-                    // 从数据库中异步获取所有单词的简略信息，其中 true 表示只获取被标记为忽略的单词。
+        //             let words = await this.plugin.db.getAllExpressionSimple(
+        //                 true
+        //             );
+        //             // 从数据库中异步获取所有单词的简略信息，其中 true 表示只获取被标记为忽略的单词。
 
-                    let ignores = words
-                        .filter((w) => w.status === 0)
-                        .map((w) => w.expression);
-                    // 从获取到的单词中过滤出状态为 0（忽略）的单词，并将它们映射为一个只包含表达式的数组。
-                    let filePath = `${this.plugin.settings.word_folder}/data/${this.plugin.settings.ignore_name}.md`;
-                    // 构建文件的完整路径
+        //             let ignores = words
+        //                 .filter((w) => w.status === 0)
+        //                 .map((w) => w.expression);
+        //             // 从获取到的单词中过滤出状态为 0（忽略）的单词，并将它们映射为一个只包含表达式的数组。
+        //             let filePath = `${this.plugin.settings.word_folder}/data/${this.plugin.settings.ignore_name}.md`;
+        //             // 构建文件的完整路径
 
-                    // 检查文件是否存在，如果不存在则创建文件
-                    let file = this.app.vault.getAbstractFileByPath(filePath);
-                    if (!file) {
-                        // 文件不存在，创建新文件
-                        this.app.vault.create(filePath, ""); // 创建空文件
-                    }
-                    let fileContent = ignores.join("\n");
-                    // 异步写入文件
-                    await this.app.vault.modify(
-                        this.app.vault.getAbstractFileByPath(filePath) as TFile,
-                        fileContent
-                    );
+        //             // 检查文件是否存在，如果不存在则创建文件
+        //             let file = this.app.vault.getAbstractFileByPath(filePath);
+        //             if (!file) {
+        //                 // 文件不存在，创建新文件
+        //                 this.app.vault.create(filePath, ""); // 创建空文件
+        //             }
+        //             let fileContent = ignores.join("\n");
+        //             // 异步写入文件
+        //             await this.app.vault.modify(
+        //                 this.app.vault.getAbstractFileByPath(filePath) as TFile,
+        //                 fileContent
+        //             );
 
-                    new Notice(t("Words have been written to file!"));
-                })
-            );
+        //             new Notice(t("Words have been written to file!"));
+        //         })
+        //     );
 
         // 销毁数据库
         new Setting(containerEl)
@@ -544,7 +544,7 @@ export class SettingTab extends PluginSettingTab {
     }
 
     textDBSettings(containerEl: HTMLElement) {
-        containerEl.createEl("h3", { text: t("Text Database") });
+        containerEl.createEl("h2", { text: t("Text Database") });
 
         new Setting(containerEl)
             .setName(t("Auto refresh"))
@@ -572,34 +572,61 @@ export class SettingTab extends PluginSettingTab {
                         this.plugin.settings.word_folder = path;
 
                         // 根据新的 word_folder 值更新其他数据库路径
-                        this.plugin.settings.ignore_database = `${path}/data/${this.plugin.settings.ignore_name}.md`;
-                        this.plugin.settings.word_database = `${path}/data/${this.plugin.settings.word_name}.md`;
-                        this.plugin.settings.review_database = `${path}/data/${this.plugin.settings.review_name}.md`;
+                        this.plugin.settings.ignore_database = `${this.plugin.settings.word_folder}/data/${this.plugin.settings.ignore_name}.md`;
+                        this.plugin.settings.word_database = `${this.plugin.settings.word_folder}/data/${this.plugin.settings.word_name}.md`;
+                        this.plugin.settings.review_database = `${this.plugin.settings.word_folder}/data/${this.plugin.settings.review_name}.md`;
 
                         // 保存设置以确保更改被保留
                         await this.plugin.saveSettings();
                     })
             );
         new Setting(containerEl)
-            .setName(t("Word Database Path"))
+            .setName(t("Word Database Name"))
             .setDesc(t("Choose a md file as word database for auto-completion"))
             .addText((text) =>
-                text.setValue(this.plugin.settings.word_database)
+                text
+                    .setValue(this.plugin.settings.word_database)
+                    .onChange(async (path) => {
+                        // 更新 word_database 的值
+                        this.plugin.settings.word_name = path;
+                        this.plugin.settings.word_database = `${this.plugin.settings.word_folder}/data/${this.plugin.settings.word_name}.md`;
+
+                        // 保存设置以确保更改被保留
+                        await this.plugin.saveSettings();
+                    })
             );
 
         new Setting(containerEl)
-            .setName(t("Review Database Path"))
+            .setName(t("Review Database Name"))
             .setDesc(
                 t("Choose a md file as review database for spaced-repetition")
             )
             .addText((text) =>
-                text.setValue(this.plugin.settings.review_database)
+                text
+                    .setValue(this.plugin.settings.review_database)
+                    .onChange(async (path) => {
+                        // 更新 review_database 的值
+                        this.plugin.settings.review_name = path;
+                        this.plugin.settings.review_database = `${this.plugin.settings.word_folder}/data/${this.plugin.settings.review_name}.md`;
+                        // 保存设置以确保更改被保留
+                        await this.plugin.saveSettings();
+                    })
             );
         new Setting(containerEl)
-            .setName(t("Ignore Database Path"))
-            .setDesc(t("Choose a md file as ignore database for auto-completion"))
+            .setName(t("Ignore Database Name"))
+            .setDesc(
+                t("Choose a md file as ignore database for auto-completion")
+            )
             .addText((text) =>
-                text.setValue(this.plugin.settings.ignore_database)
+                text
+                    .setValue(this.plugin.settings.ignore_database)
+                    .onChange(async (path) => {
+                        // 更新 ignore_database 的值
+                        this.plugin.settings.ignore_name = path;
+                        this.plugin.settings.ignore_database = `${this.plugin.settings.word_folder}/data/${this.plugin.settings.ignore_name}.md`;
+                        // 保存设置以确保更改被保留
+                        await this.plugin.saveSettings();
+                    })
             );
     }
 
