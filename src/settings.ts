@@ -505,17 +505,14 @@ export class SettingTab extends PluginSettingTab {
                         // 文件不存在，创建新文件
                         this.app.vault.create(filePath, ""); // 创建空文件
                     }
-                    let fileContent = ignores.join("\n") ;
+                    let fileContent = ignores.join("\n");
                     // 异步写入文件
                     await this.app.vault.modify(
                         this.app.vault.getAbstractFileByPath(filePath) as TFile,
-                        fileContent 
+                        fileContent
                     );
 
-                    new Notice(
-                        t("Words have been written to file!")
-                    );
-
+                    new Notice(t("Words have been written to file!"));
                 })
             );
 
@@ -559,17 +556,34 @@ export class SettingTab extends PluginSettingTab {
                         await this.plugin.saveSettings();
                     })
             );
+        new Setting(containerEl)
+            .setName(t("Vault Folder Database Path"))
+            .setDesc(
+                t(
+                    "Set the database path for words and reviews, as well as ignored words and non-ignored words."
+                )
+            )
+            .addText((text) =>
+                text
+                    .setValue(this.plugin.settings.word_folder)
+                    .onChange(async (path) => {
+                        // 更新 word_folder 的值
+                        this.plugin.settings.word_folder = path;
 
+                        // 根据新的 word_folder 值更新其他数据库路径
+                        this.plugin.settings.ignore_database = `${path}/data/${this.plugin.settings.ignore_name}.md`;
+                        this.plugin.settings.word_database = `${path}/data/${this.plugin.settings.word_name}.md`;
+                        this.plugin.settings.review_database = `${path}/data/${this.plugin.settings.review_name}.md`;
+
+                        // 保存设置以确保更改被保留
+                        await this.plugin.saveSettings();
+                    })
+            );
         new Setting(containerEl)
             .setName(t("Word Database Path"))
             .setDesc(t("Choose a md file as word database for auto-completion"))
             .addText((text) =>
-                text
-                    .setValue(this.plugin.settings.word_database)
-                    .onChange(async (path) => {
-                        this.plugin.settings.word_database = path;
-                        await this.plugin.saveSettings();
-                    })
+                text.setValue(this.plugin.settings.word_database)
             );
 
         new Setting(containerEl)
@@ -578,12 +592,13 @@ export class SettingTab extends PluginSettingTab {
                 t("Choose a md file as review database for spaced-repetition")
             )
             .addText((text) =>
-                text
-                    .setValue(this.plugin.settings.review_database)
-                    .onChange(async (path) => {
-                        this.plugin.settings.review_database = path;
-                        await this.plugin.saveSettings();
-                    })
+                text.setValue(this.plugin.settings.review_database)
+            );
+        new Setting(containerEl)
+            .setName(t("Ignore Database Path"))
+            .setDesc(t("Choose a md file as ignore database for auto-completion"))
+            .addText((text) =>
+                text.setValue(this.plugin.settings.ignore_database)
             );
     }
 

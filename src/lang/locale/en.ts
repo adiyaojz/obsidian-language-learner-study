@@ -180,11 +180,17 @@ export default {
     British: "British",
     Delimiter: "Delimiter",
 
-    "Words have been written to file!": "Words have been written to file!",
     "As Server": "As Server",
     "Self as Server": "Self as Server",
     "Make plugin a server and interact with chrome extension":
         "Make plugin a server and interact with chrome extension",
     "when changing port, you should restart the server":
         "when changing port, you should restart the server",
+    //add new
+    "Words have been written to file!": "Words have been written to file!",
+    "Vault Folder Database Path": "Vault Folder Database Path",
+    "Set the database path for words and reviews, as well as ignored words and non-ignored words.":"Set the database path for words and reviews, as well as ignored words and non-ignored words.",
+"Choose a md file as ignore database for auto-completion":"Choose a md file as ignore database for auto-completion",
+"Ignore Database Path":"Ignore Database Path",
+
 };
