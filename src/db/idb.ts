@@ -28,6 +28,7 @@ interface Expression {
     tags: Set<string>,
     sentences: Set<number>,
     connections: Map<string, string>,
+    aliases: string[],
 }
 interface Sentence {
     id?: number;

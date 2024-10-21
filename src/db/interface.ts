@@ -33,6 +33,7 @@ interface ExpressionInfo {
     tags: string[];
     notes: string[];
     sentences: Sentence[];
+    aliases: string[];
 }
 
 interface ExpressionInfoSimple {
@@ -44,6 +45,7 @@ interface ExpressionInfoSimple {
     note_num: number;
     sen_num: number;
     date: number;
+    aliases: string[];
 }
 
 interface CountInfo {
