@@ -74,22 +74,22 @@ export const DEFAULT_SETTINGS: MyPluginSettings = {
     native: "zh",
     foreign: "en",
     // search
-    popup_search: true,
+    popup_search: false,
     auto_pron: true,
     function_key: "ctrlKey",
     dictionaries: {
         youdao: { enable: true, priority: 1 },
-        cambridge: { enable: true, priority: 2 },
-        jukuu: { enable: true, priority: 3 },
-        hjdict: { enable: true, priority: 4 },
-        deepl: { enable: true, priority: 5 },
+        cambridge: { enable: false, priority: 2 },
+        jukuu: { enable: false, priority: 3 },
+        hjdict: { enable: false, priority: 4 },
+        deepl: { enable: false, priority: 5 },
     },
     dict_height: "700px",
     // indexed
     db_name: "WordDB",
     // file db
     use_fileDB: true,
-    word_folder: "WordDataBase",
+    word_folder: "WordDatabase",
     only_fileDB: false,
     // text db
     ignore_name: "Ignore",
@@ -407,6 +407,7 @@ export class SettingTab extends PluginSettingTab {
                     )
                 )
             )
+            //重载按钮
             .addButton((button) =>
                 button.setButtonText(t("Reopen")).onClick(async () => {
                     this.plugin.db.close();

@@ -293,6 +293,7 @@ export default class LanguageLearner extends Plugin {
         // 异步方法，用于刷新文本数据库
         await this.refreshWordDb(); // 刷新单词数据库
         await this.refreshReviewDb(); // 刷新复习数据库
+        await this.refreshIgnoreDB(); //刷新无视数据库
         (this.app as any).commands.executeCommandById(
             "various-complements:reload-custom-dictionaries"
         ); // 执行命令以重新加载自定义字典
@@ -300,6 +301,9 @@ export default class LanguageLearner extends Plugin {
 
     refreshWordDb = async () => {
         // 检查是否启用了单词数据库功能
+        if (!this.settings.use_fileDB) {
+            return;
+        }
         // 如果路径为空，则默认在根目录生成"WordDB.md"文件
         if (!this.settings.word_database) {
             this.settings.word_database = "data/WordDB.md"; // 设置默认文件名
@@ -414,6 +418,9 @@ export default class LanguageLearner extends Plugin {
     };
 
     refreshReviewDb = async () => {
+        if (!this.settings.use_fileDB) {
+            return;
+        }
         // 检查是否设置了复习数据库路径
         if (!this.settings.review_database) {
             this.settings.review_database = "data/ReviewDB.md";
@@ -427,31 +434,32 @@ export default class LanguageLearner extends Plugin {
         // 如果文件不存在或是一个目录（而不是文件），则显示错误通知并退出函数
         if (!dataBase) {
             // 分割路径以获取目录和文件名
-            let pathParts = this.settings.word_database.split("/");
+
+            let pathParts = this.settings.review_database.split("/");
             let dirPath = pathParts.slice(0, -1).join("/"); // 获取目录路径
             let fileName = pathParts[pathParts.length - 1]; // 获取文件名
 
             // 确保目录存在，如果不存在则创建目录
             if (dirPath && !this.app.vault.getAbstractFileByPath(dirPath)) {
                 this.app.vault.createFolder(dirPath); // 创建目录
+            }
 
-                // 创建文件
-                try {
-                    await this.app.vault.create(
-                        this.settings.word_database,
+            // 创建文件
+            try {
+                await this.app.vault.create(
+                    this.settings.review_database,
+                    fileName
+                );
+            } catch (err) {
+                if (err.message.includes("File already exists")) {
+                    this.app.vault.adapter.write(
+                        normalizePath(this.settings.review_database),
                         fileName
                     );
-                } catch (err) {
-                    if (err.message.includes("File already exists")) {
-                        this.app.vault.adapter.write(
-                            normalizePath(this.settings.word_database),
-                            fileName
-                        );
-                    }
                 }
             }
             dataBase = this.app.vault.getAbstractFileByPath(
-                this.settings.word_database
+                this.settings.review_database
             );
         }
         // 将获取的文件对象断言为TFile类型
@@ -530,6 +538,65 @@ export default class LanguageLearner extends Plugin {
 
         // 保存设置
         this.saveSettings();
+    };
+
+    refreshIgnoreDB = async () => {
+        // 检查是否启用了忽略单词数据库功能
+        if (!this.settings.use_fileDB) {
+            return;
+        }
+
+        // 如果路径为空，则默认在根目录生成"IgnoreDB.md"文件
+        if (!this.settings.ignore_database) {
+            this.settings.ignore_database = "data/IgnoreDB.md"; // 设置默认文件名
+        }
+
+        // 从Obsidian的仓库中获取忽略单词数据库文件
+        let ignoreDB = this.app.vault.getAbstractFileByPath(
+            this.settings.ignore_database
+        );
+
+        // 如果文件不存在，则创建对应路径的文件
+        if (!ignoreDB) {
+            // 分割路径以获取目录和文件名
+            let pathParts = this.settings.ignore_database.split("/");
+            let dirPath = pathParts.slice(0, -1).join("/"); // 获取目录路径
+            let fileName = pathParts[pathParts.length - 1]; // 获取文件名
+
+            // 确保目录存在，如果不存在则创建目录
+            if (dirPath && !this.app.vault.getAbstractFileByPath(dirPath)) {
+                this.app.vault.createFolder(dirPath); // 创建目录
+            }
+
+            // 创建文件
+            try {
+                await this.app.vault.create(
+                    this.settings.ignore_database,
+                    fileName
+                );
+            } catch (err) {
+                if (err.message.includes("File already exists")) {
+                    this.app.vault.adapter.write(
+                        normalizePath(this.settings.ignore_database),
+                        fileName
+                    );
+                }
+            }
+            ignoreDB = this.app.vault.getAbstractFileByPath(
+                this.settings.ignore_database
+            );
+        }
+
+        // 获取所有忽略状态的单词简略信息
+        let ignores = await this.db.getAllExpressionSimple(true);
+        
+        // 将忽略的单词数组转换为字符串，单词之间用换行符分隔
+        let ignoreText = ignores.map((w) => w.expression).join("\n");
+        
+        // 将文件对象转换为TFile类型
+        let db = ignoreDB as TFile;
+        // 修改文件内容
+        this.app.vault.modify(db, ignoreText);
     };
 
     // 在MardownView的扩展菜单加一个转为Reading模式的选项
